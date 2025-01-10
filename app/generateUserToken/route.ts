@@ -1,4 +1,4 @@
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { StreamClient, UserRequest } from "@stream-io/node-sdk";
 
 const apiKey = process.env.API_GETSTREAM_PUBLISHABLE_KEY;
@@ -10,7 +10,9 @@ if (!apiKey || !secret) {
 
 const client = new StreamClient(apiKey, secret);
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
+  console.log("Generating user token");
+  
   const { userId, name, image, email } = await req.json();
 
   const newUser: UserRequest = {
@@ -35,4 +37,5 @@ export async function POST(req: Request) {
   console.log(
     `User ${userId} created with token ${token} and validity ${validity}`
   );
+  return NextResponse.json({ token });
 }
